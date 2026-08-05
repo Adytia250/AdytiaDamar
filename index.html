@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nama Kamu — Software Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============================================
+     TOKEN — ganti warna/font di sini
+     ============================================ */
+  :root{
+    --bg: #0A0A0D;
+    --surface: #111116;
+    --surface-alt: #17171D;
+    --ink: #F3F3F5;
+    --ink-muted: #9A9AA5;
+    --ink-faint: #5C5C68;
+    --accent: #C6FF3E;      /* acid lime — signature */
+    --accent-ink: #0A0A0D;
+    --accent-2: #FF3E7F;    /* hot pink — secondary */
+    --border: #26262E;
+    --border-strong: #38383F;
+    --radius: 4px;
+    --shadow-hard: 6px 6px 0 var(--accent);
+    --shadow-hard-pink: 6px 6px 0 var(--accent-2);
+    --font-display: 'Archivo Black', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--font-body);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(198,255,62,.06), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(255,62,127,.05), transparent 40%);
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  section{ scroll-margin-top:70px; }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  .container{ max-width:1160px; margin:0 auto; padding:0 24px; }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{ content:"//"; color:var(--ink-faint); }
+
+  h1,h2,h3{ font-family:var(--font-display); font-weight:400; letter-spacing:-.01em; text-transform:uppercase; line-height:1; }
+
+  .btn{
+    font-family:var(--font-mono);
+    font-size:13.5px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    padding:15px 26px;
+    border:2px solid var(--ink);
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+    background:var(--bg);
+    color:var(--ink);
+    box-shadow:var(--shadow-hard);
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+  }
+  .btn:hover{ transform:translate(3px,3px); box-shadow:0 0 0 var(--accent); }
+  .btn-primary{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .btn-primary:hover{ background:var(--ink); border-color:var(--ink); color:var(--accent-ink); }
+
+  /* ============================================
+     NAV
+     ============================================ */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,10,13,.9);
+    backdrop-filter:blur(10px);
+    border-bottom:2px solid var(--border);
+  }
+  .nav-wrap{ display:flex; align-items:center; justify-content:space-between; height:64px; }
+  .nav-brand{
+    font-family:var(--font-display);
+    font-size:16px;
+    display:flex; align-items:center; gap:4px;
+  }
+  .nav-brand .dot{ color:var(--accent); }
+
+  .nav-tabs{ display:flex; gap:2px; }
+  .nav-tabs a{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--ink-muted);
+    padding:10px 16px;
+    transition:color .15s ease, background .15s ease;
+  }
+  .nav-tabs a:hover{ color:var(--ink); }
+  .nav-tabs a.active{ color:var(--accent-ink); background:var(--accent); }
+  .nav-toggle{
+    display:none;
+    font-family:var(--font-mono); font-size:12px; text-transform:uppercase;
+    background:none; border:2px solid var(--ink); color:var(--ink);
+    padding:8px 12px; cursor:pointer;
+  }
+  @media (max-width:840px){
+    .nav-tabs{
+      position:absolute; top:64px; left:0; right:0;
+      background:var(--bg); border-bottom:2px solid var(--border);
+      flex-direction:column; display:none; padding:8px 24px 18px;
+    }
+    .nav-tabs.open{ display:flex; }
+    .nav-tabs a{ padding:14px 0; border-bottom:1px solid var(--border); }
+    .nav-toggle{ display:block; }
+  }
+
+  /* ============================================
+     MARQUEE — scrolling ticker
+     ============================================ */
+  .marquee{
+    border-top:2px solid var(--border);
+    border-bottom:2px solid var(--border);
+    background:var(--surface);
+    overflow:hidden;
+    white-space:nowrap;
+    padding:14px 0;
+  }
+  .marquee-track{
+    display:inline-flex;
+    animation:scrollLeft 26s linear infinite;
+  }
+  .marquee-track span{
+    font-family:var(--font-mono);
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-muted);
+    padding:0 22px;
+    display:inline-flex;
+    align-items:center;
+    gap:22px;
+  }
+  .marquee-track span::after{ content:"//"; color:var(--accent); }
+  @keyframes scrollLeft{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* ============================================
+     HERO
+     ============================================ */
+  .hero{ padding:80px 0 0; position:relative; }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:48px;
+    align-items:center;
+    padding-bottom:64px;
+  }
+  .hero h1{
+    font-size:clamp(40px, 6.4vw, 78px);
+    margin-bottom:24px;
+  }
+  .hero h1 .hl{
+    color:var(--accent);
+    display:inline-block;
+    position:relative;
+  }
+  .glitch{ position:relative; }
+  .glitch::before, .glitch::after{
+    content:attr(data-text);
+    position:absolute; left:0; top:0;
+    width:100%; height:100%;
+    background:var(--bg); mix-blend-mode:screen;
+    overflow:hidden;
+  }
+  .glitch::before{ color:var(--accent-2); animation:glitchTop 3.5s infinite linear; }
+  .glitch::after{ color:var(--accent); animation:glitchBot 3.5s infinite linear; }
+  @keyframes glitchTop{
+    0%,92%,100%{ clip-path:inset(0 0 100% 0); transform:translate(0,0); }
+    93%{ clip-path:inset(10% 0 60% 0); transform:translate(-3px,-1px); }
+    95%{ clip-path:inset(40% 0 20% 0); transform:translate(2px,1px); }
+    97%{ clip-path:inset(70% 0 5% 0); transform:translate(-2px,0); }
+  }
+  @keyframes glitchBot{
+    0%,92%,100%{ clip-path:inset(100% 0 0 0); transform:translate(0,0); }
+    93%{ clip-path:inset(60% 0 10% 0); transform:translate(3px,1px); }
+    95%{ clip-path:inset(20% 0 45% 0); transform:translate(-2px,-1px); }
+    97%{ clip-path:inset(5% 0 75% 0); transform:translate(2px,0); }
+  }
+
+  .hero p.lead{ font-size:17px; color:var(--ink-muted); max-width:48ch; margin-bottom:32px; }
+  .hero-actions{ display:flex; gap:16px; flex-wrap:wrap; margin-bottom:40px; }
+  .social-row{ display:flex; gap:20px; }
+  .social-row a{
+    font-family:var(--font-mono); font-size:12.5px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--ink-muted);
+    border-bottom:1px solid transparent;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .social-row a:hover{ color:var(--accent); border-color:var(--accent); }
+
+  /* code editor panel */
+  .editor{
+    background:var(--surface);
+    border:2px solid var(--border-strong);
+    box-shadow:var(--shadow-hard-pink);
+    overflow:hidden;
+    font-family:var(--font-mono);
+    font-size:13.5px;
+  }
+  .editor-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:12px 16px;
+    background:var(--surface-alt);
+    border-bottom:2px solid var(--border-strong);
+  }
+  .editor-bar .dot{ width:10px; height:10px; border-radius:50%; }
+  .editor-bar .dot:nth-child(1){ background:var(--accent-2); }
+  .editor-bar .dot:nth-child(2){ background:var(--accent); }
+  .editor-bar .dot:nth-child(3){ background:var(--ink-faint); }
+  .editor-filename{ margin-left:8px; color:var(--ink-faint); font-size:12px; text-transform:uppercase; letter-spacing:.05em;}
+  .editor-body{ display:grid; grid-template-columns:34px 1fr; padding:20px 0; }
+  .editor-lines{ text-align:right; color:#3A3A44; user-select:none; padding-right:12px; }
+  .editor-lines div{ height:24px; }
+  .editor-code{ padding-right:20px; color:#C9CEDA; }
+  .editor-code div{ height:24px; white-space:pre; }
+  .tok-kw{ color:var(--accent-2); }
+  .tok-prop{ color:#7FC7FF; }
+  .tok-str{ color:var(--accent); }
+  .tok-punc{ color:var(--ink-faint); }
+  .cursor{
+    display:inline-block; width:7px; height:15px;
+    background:var(--accent); margin-left:2px;
+    animation:blink 1s step-end infinite; vertical-align:text-bottom;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ============================================
+     SECTION HEADER — big index number
+     ============================================ */
+  .section{ padding:96px 0; border-top:2px solid var(--border); position:relative; }
+  .section-head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    gap:24px; margin-bottom:52px; flex-wrap:wrap;
+  }
+  .section-index{
+    font-family:var(--font-display);
+    font-size:clamp(50px,7vw,88px);
+    color:var(--surface-alt);
+    -webkit-text-stroke:1.5px var(--border-strong);
+    line-height:.8;
+  }
+  .section-head h2{ font-size:clamp(28px,3.6vw,42px); }
+  .section-path{ font-family:var(--font-mono); font-size:12px; color:var(--accent); text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }
+
+  /* ============================================
+     ABOUT
+     ============================================ */
+  .about-grid{ display:grid; grid-template-columns:280px 1fr; gap:56px; align-items:start; }
+  .about-photo{
+    aspect-ratio:1/1;
+    border:2px solid var(--ink);
+    box-shadow:8px 8px 0 var(--accent);
+    background:var(--surface-alt);
+    display:flex; align-items:center; justify-content:center;
+    color:var(--ink-faint);
+    font-family:var(--font-mono); font-size:12.5px; text-transform:uppercase;
+    letter-spacing:.05em; text-align:center; padding:20px;
+  }
+  .about-text p{ color:var(--ink-muted); margin-bottom:16px; max-width:62ch; }
+  .facts{
+    margin-top:28px; display:grid; grid-template-columns:1fr 1fr; gap:14px 32px;
+    font-family:var(--font-mono); font-size:13px; text-transform:uppercase;
+  }
+  .facts div{ display:flex; justify-content:space-between; border-bottom:1px solid var(--border); padding-bottom:12px; gap:10px; }
+  .facts b{ color:var(--ink-faint); font-weight:400; letter-spacing:.05em; }
+  .facts span{ color:var(--accent); text-align:right; }
+  @media (max-width:720px){ .about-grid{ grid-template-columns:1fr; } .about-photo{ max-width:220px; } }
+
+  /* ============================================
+     SKILLS
+     ============================================ */
+  .skills-groups{ display:grid; grid-template-columns:repeat(3,1fr); gap:2px; background:var(--border); border:2px solid var(--border); }
+  .skill-group{ background:var(--surface); padding:26px; }
+  .skill-group h3{
+    font-family:var(--font-mono); font-size:12.5px; font-weight:600; text-transform:uppercase;
+    letter-spacing:.08em; color:var(--accent); margin-bottom:18px;
+  }
+  .badge-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .badge{
+    font-family:var(--font-mono); font-size:12px; text-transform:uppercase;
+    background:var(--bg); border:1px solid var(--border-strong);
+    padding:7px 11px; color:var(--ink);
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .badge:hover{ border-color:var(--accent); color:var(--accent); }
+  @media (max-width:820px){ .skills-groups{ grid-template-columns:1fr; } }
+
+  /* ============================================
+     PROJECTS
+     ============================================ */
+  .projects-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+  .project-card{
+    background:var(--surface);
+    border:2px solid var(--border-strong);
+    overflow:hidden;
+    display:flex; flex-direction:column;
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .project-card:hover{
+    transform:translate(-4px,-4px);
+    box-shadow:6px 6px 0 var(--accent);
+    border-color:var(--ink);
+  }
+  .project-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Mengubah dari cover agar foto tampil utuh */
+  background-color: var(--surface); /* Menghindari area kosong yang transparan/aneh */
+}
+  .project-body{ padding:22px; display:flex; flex-direction:column; gap:10px; flex:1; }
+  .project-tag{
+    align-self:flex-start; font-family:var(--font-mono); font-size:11px; text-transform:uppercase;
+    letter-spacing:.05em; background:var(--accent); color:var(--accent-ink); padding:4px 9px;
+  }
+  .project-body h3{ font-size:19px; }
+  .project-body p{ color:var(--ink-muted); font-size:14px; flex:1; text-transform:none; font-family:var(--font-body); }
+  .project-links{ display:flex; gap:18px; font-family:var(--font-mono); font-size:12px; text-transform:uppercase; letter-spacing:.05em; margin-top:4px; }
+  .project-links a{ color:var(--ink-muted); border-bottom:1px solid var(--border-strong); }
+  .project-links a:hover{ color:var(--accent); border-color:var(--accent); }
+  @media (max-width:960px){ .projects-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:640px){ .projects-grid{ grid-template-columns:1fr; } }
+
+  /* ============================================
+     EXPERIENCE
+     ============================================ */
+  .timeline{ position:relative; padding-left:32px; }
+  .timeline::before{ content:""; position:absolute; left:6px; top:6px; bottom:6px; width:2px; background:var(--border-strong); }
+  .t-item{ position:relative; padding-bottom:40px; }
+  .t-item:last-child{ padding-bottom:0; }
+  .t-item::before{
+    content:""; position:absolute; left:-32px; top:2px;
+    width:14px; height:14px; background:var(--bg); border:2px solid var(--accent);
+  }
+  .t-hash{ font-family:var(--font-mono); font-size:13px; color:var(--accent); margin-bottom:6px; text-transform:uppercase; letter-spacing:.05em;}
+  .t-item h3{ font-size:19px; margin-bottom:6px; }
+  .t-role{ color:var(--ink-muted); font-size:13px; margin-bottom:10px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.04em; }
+  .t-item p{ color:var(--ink-muted); font-size:14.5px; max-width:65ch; text-transform:none; }
+
+  /* ============================================
+     CONTACT
+     ============================================ */
+  .contact-panel{
+    background:var(--surface);
+    border:2px solid var(--ink);
+    box-shadow:10px 10px 0 var(--accent);
+    padding:52px 44px;
+  }
+  .contact-top{ margin-bottom:36px; }
+  .contact-top h2{ font-size:clamp(28px,4vw,44px); }
+  .contact-top p{ color:var(--ink-muted); margin-top:14px; max-width:46ch; text-transform:none; font-family:var(--font-body); }
+  .prompt-line{ font-family:var(--font-mono); font-size:14px; color:var(--accent); margin-bottom:24px; }
+  .prompt-line span{ color:var(--ink-faint); }
+  form{ display:grid; gap:16px; max-width:540px; }
+  .field label{ display:block; font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-faint); margin-bottom:8px; }
+  .field input, .field textarea{
+    width:100%; background:var(--bg); border:2px solid var(--border-strong);
+    padding:13px 15px; color:var(--ink); font-family:var(--font-mono); font-size:13.5px;
+  }
+  .field textarea{ resize:vertical; min-height:100px; }
+  .field input:focus, .field textarea:focus{ outline:none; border-color:var(--accent); }
+
+  footer{
+    padding:36px 0; font-family:var(--font-mono); font-size:12px; text-transform:uppercase;
+    letter-spacing:.05em; color:var(--ink-faint);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    border-top:2px solid var(--border);
+  }
+  footer a:hover{ color:var(--accent); }
+
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .5s ease, transform .5s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  @media (max-width:960px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .editor{ order:-1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav-wrap">
+    <div class="nav-brand"><span class="dot">/</span>PORTFOLIO</div>
+    <nav class="nav-tabs" id="navTabs">
+      <a href="#home" class="active">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="Buka menu">Menu</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="home">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Available for collaboration</p>
+        <h1>Halo!, Saya<br><span class="hl glitch" data-text="NAMA KAMU">ADYTIA</span></h1>
+        <p class="lead">
+          Saya adalah Software Developer & Unity Game Engineer yang berpengalaman dalam membangun aplikasi interaktif real-time, 
+          sistem berbasis web yang responsif, serta solusi perangkat lunak yang inovatif.
+        </p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">Lihat Proyek →</a>
+          <a href="CV_Adytia_Damar.pdf" class="btn" download>Unduh CV</a>
+        </div>
+        <div class="social-row">
+          <a href="https://github.com/Adytia250">GitHub</a>
+          <a href="https://www.instagram.com/adyt.damar">Instagram</a>
+          <a href="mailto:adytiaoblek07@gmail.com?subject=Tawaran%20Kerja%20Sama%20-%20Portofolio">Email</a>
+        </div>
+      </div>
+
+      <div class="editor">
+        <div class="editor-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="editor-filename">profile.js</span>
+        </div>
+        <div class="editor-body">
+          <div class="editor-lines">
+            <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div><div>6</div><div>7</div><div>8</div><div>9</div>
+          </div>
+          <div class="editor-code">
+            <div><span class="tok-kw">const</span> developer = {</div>
+            <div>&nbsp;&nbsp;<span class="tok-prop">name</span>: <span class="tok-str">"Adytia Damar Panuntun"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="tok-prop">role</span>: <span class="tok-str">"Unity Game & Software Developer"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="tok-prop">location</span>: <span class="tok-str">"Sidoarjo, ID"</span>,</div>
+            <div>&nbsp;&nbsp;<span class="tok-prop">stack</span>: [<span class="tok-str">"Unity", "C#", "Laravel", "PHP", "MySQL"</span>]</div>
+            <div>&nbsp;&nbsp;<span class="tok-prop">available</span>: <span class="tok-kw">true</span>,</div>
+            <div>};</div>
+            <div>&nbsp;</div>
+            <div><span class="tok-punc">// siap membangun sesuatu</span><span class="cursor"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   <div class="marquee">
+  <div class="marquee-track">
+    <span>Unity Game Development</span><span>C#</span><span>Laravel</span><span>PHP</span><span>MySQL</span><span>Artificial Intelligence</span><span>Object-Oriented Programming</span>
+    <span>Unity Game Development</span><span>C#</span><span>Laravel</span><span>PHP</span><span>MySQL</span><span>Artificial Intelligence</span><span>Object-Oriented Programming</span>
+  </div>
+</div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section reveal" id="about">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-path">// About</p>
+          <h2>Tentang Saya</h2>
+        </div>
+        <span class="section-index">01</span>
+      </div>
+      <div class="about-grid">
+        <div class="about-photo">
+    <img src="Adytia.png" alt="Adytia Damar Panuntun" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+        <div class="about-text">
+          <p>
+            Berawal dari ketertarikan pada rekayasa perangkat lunak,
+            saya fokus mengembangkan keahlian di bidang pengembangan game menggunakan Unity serta perancangan sistem berbasis web.
+            Saya menikmati pemecahan masalah logika dan membangun aplikasi yang efisien.
+          </p>
+          <p>
+            Dalam setiap proyek, saya mengutamakan kode yang bersih, perhatian terhadap detail,
+            serta fungsionalitas yang optimal untuk menghadirkan pengalaman pengguna terbaik.
+          </p>
+          <div class="facts">
+            <div><b>Lokasi</b><span>Sidoarjo, ID</span></div>
+            <div><b>Pengalaman</b><span>GAME & WEB DEV</span></div>
+            <div><b>Fokus</b><span>UNITY & LARAVEL</span></div>
+            <div><b>Status</b><span>Open to Work</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SKILLS ============ -->
+  <section class="section reveal" id="skills">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-path">// Skills</p>
+          <h2>Skill & Tools</h2>
+        </div>
+        <span class="section-index">02</span>
+      </div>
+      <div class="skills-groups">
+        <div class="skill-group">
+          <h3>Frontend</h3>
+          <div class="badge-row">
+            <span class="badge">HTML/CSS</span><span class="badge">JavaScript</span>
+            <span class="badge">Laravel Blade</span><span class="badge">UI/UX DESIGN</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Backend</h3>
+          <div class="badge-row">
+            <span class="badge">PHP / LARAVEL</span><span class="badge">SQL SERVER / MYSQL</span>
+            <span class="badge">C#</span><span class="badge">REST API</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Tools</h3>
+          <div class="badge-row">
+            <span class="badge">Git</span><span class="badge">UNITY</span>
+            <span class="badge">VISUAL STUDIO</span><span class="badge">Vercel/Railway</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section class="section reveal" id="projects">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-path">// Selected Work</p>
+          <h2>Proyek Pilihan</h2>
+        </div>
+        <span class="section-index">03</span>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-thumb">
+    <img src="MainMenu.png" alt="Parking Simulator 3D" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+          <div class="project-body">
+            <span class="project-tag">.APP</span>
+            <h3>Parking Simulator 3D</h3>
+            <p>Mengembangkan game simulasi parkir 3D interaktif dengan Unity 6,
+                mencakup sistem pergerakan kendaraan realistis berTransmisi manual, serta arsitektur gameplay modular.</p>
+            <div class="project-links"><a href="https://youtu.be/NGfSGcj-uqE?si=qmn4wPPE46Jiok1W">Live Demo</a>
+              <a href="https://github.com/Adytia250/parking-simulator-unity">Source</a></div>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-thumb">
+    <img src="HERO.png" alt="AZ Cafe & Pool Web Application" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+          <div class="project-body">
+            <span class="project-tag">.WEB</span>
+            <h3>AZ Cafe & Pool</h3>
+            <p>Mengembangkan landing page interaktif modern untuk bisnis kafe dan arena biliar yang mencakup informasi fasilitas,
+              katalog menu, galeri kegiatan, serta integrasi tombol reservasi langsung.</p>
+            <div class="project-links"><a href="https://adytia250.github.io/azcafepool/">Visit Site</a>
+              <a href="https://github.com/Adytia250/azcafepool">Source</a></div>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-thumb">
+    <img src="dashboard.png" alt="Sistem Informasi Penjualan & Inventaris - Emas Stationery" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+          <div class="project-body">
+            <span class="project-tag">.SYSTEM</span>
+            <h3>Emas Stationery</h3>
+            <p>Merancang dan mengimplementasikan sistem informasi web untuk manajemen inventaris, 
+              pemasok, pencatatan transaksi penjualan, serta pelaporan otomatis berbasis basis data terpusat.</p>
+            <div class="project-links"><a href="https://emasstationary.infinityfree.io/">Visit Site</a>
+              <a href="https://github.com/Adytia250/emas-stationery">Source</a></div>
+          </div>
+        </div>
+         <div class="project-card">
+          <div class="project-thumb">
+    <img src="HERO2.png" alt="Pastwear Official E-Commerce" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+          <div class="project-body">
+            <span class="project-tag">.WEB</span>
+            <h3>Pastwear Official</h3>
+            <p>Membangun website e-commerce dan katalog responsif untuk brand pakaian bertema vintage,
+              lengkap dengan fitur pameran kurasi koleksi produk, narasi brand, serta formulir ulasan pelanggan interaktif.</p>
+            <div class="project-links"><a href="https://www.pastwearofficial.my.id/">Visit Site</a>
+              <a href="https://github.com/Adytia250/pastwearofficial">Source</a></div>
+          </div>
+        </div>
+         <div class="project-card">
+          <div class="project-thumb">
+    <img src="HERO3.png" alt="Singgah Sini Hotel Reservation App" style="width: 100%; height: 100%; object-fit: cover;">
+</div>
+          <div class="project-body">
+            <span class="project-tag">.WEB</span>
+            <h3>Singgah Sini Hotel</h3>
+            <p>Membangun website profil dan sistem pemesanan akomodasi penginapan yang interaktif, lengkap dengan informasi detail tipe kamar, 
+              fasilitas umum hotel, manajemen akun pengguna, serta navigasi lokasi terintegrasi.</p>
+            <div class="project-links"><a href="https://adytia250.github.io/Singgah-Sini/">Visit Site</a>
+              <a href="https://github.com/Adytia250/Singgah-Sini">Source</a></div>
+          </div>
+        </div>  
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="section reveal" id="experience">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-path">// Experience</p>
+          <h2>Pengalaman</h2>
+        </div>
+        <span class="section-index">04</span>
+      </div>
+        <div class="t-item">
+          <p class="t-hash">2024 — 2026</p>
+          <h3>PT. EDY MACAN MULTIMEDIA CENTER</h3>
+          <p class="t-role">IT Support & Editor</p>
+          <p>Bertanggung jawab sebagai penyangga infrastruktur teknologi informasi (IT Support) 
+            sekaligus pengelola serta penyunting konten pemberitaan (Editor) pada perusahaan media online.</p>
+        </div>
+        <div class="t-item">
+          <p class="t-hash">2020 — 2021</p>
+          <h3>ED MANAGEMENT</h3>
+          <p class="t-role">Magang Digital Marketing</p>
+          <p>Menjalani masa magang dengan berfokus pada strategi pemasaran digital, pengelolaan kampanye media, 
+            serta pengembangan visibilitas merek.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <!-- ============ CONTACT ============ -->
+  <section class="section reveal" id="contact">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="section-path">// Get in Touch</p>
+          <h2>Mari Terhubung</h2>
+        </div>
+        <span class="section-index">05</span>
+      </div>
+      <div class="contact-panel">
+        <div class="contact-top">
+          <p class="prompt-line">Punya proyek atau kesempatan kerja sama? Kirim pesan, Saya tersedia untuk proyek lepas, 
+            peran penuh waktu, dan kolaborasi yang bermakna.</p>
+        </div>
+        
+        <!-- Ganti action dengan link Formspree Anda (daftar gratis di formspree.io menggunakan email adytiaoblek07@gmail.com) -->
+        <form action="https://formspree.io/f/mzepbrea" method="POST">
+          <div class="field"><label for="name">Nama</label><input id="name" name="name" type="text" placeholder="Nama kamu" required></div>
+          <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" placeholder="email@kamu.com" required></div>
+          <div class="field"><label for="message">Pesan</label><textarea id="message" name="message" placeholder="Tulis pesanmu di sini..." required></textarea></div>
+          
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px;">
+            <button type="submit" class="btn btn-primary">Kirim Pesan (Email) →</button>
+            <a href="https://wa.me/62895364707418?text=Halo%20Adytia,%20saya%20tertarik%20untuk%20bekerja%20sama." target="_blank" class="btn" style="background: #25D366; color: #fff; border-color: #25D366;">Hubungi via WhatsApp →</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="container">
+  <span>© 2026 Adytia Damar Panuntun. All rights reserved.</span>
+  <span>Kembali ke <a href="#home">Atas ↑</a></span>
+</footer>
+
+<script>
+  const navToggle = document.getElementById('navToggle');
+  const navTabs = document.getElementById('navTabs');
+  navToggle.addEventListener('click', () => navTabs.classList.toggle('open'));
+  navTabs.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navTabs.classList.remove('open')));
+
+  const tabs = document.querySelectorAll('.nav-tabs a');
+  const setActive = () => {
+    let current = 'home';
+    document.querySelectorAll('main section[id]').forEach(sec => {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= 100) current = sec.id;
+    });
+    tabs.forEach(t => t.classList.toggle('active', t.getAttribute('href') === '#' + current));
+  };
+  document.addEventListener('scroll', setActive);
+  setActive();
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
